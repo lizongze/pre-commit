@@ -61,8 +61,8 @@ else
 	projects=(
 	`$BINARY -e "require('./rush.json').projects.forEach(item => console.log(item.projectFolder + '/'));"`
 	)
-    curBranch=`git rev-parse --abbrev-ref HEAD`
-	git fetch origin $curBranch
+    # curBranch=`git rev-parse --abbrev-ref HEAD`
+	# git fetch origin $curBranch
 	diffFiles=`git diff --cached --name-only`
 	cd $dir
 
