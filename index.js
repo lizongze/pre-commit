@@ -174,18 +174,16 @@ Hook.prototype.initialize = function initialize() {
   //
   if (!this.git) return this.log(this.format(Hook.log.binary, 'git'), 0);
 
-  this.root = this.exec(this.git, ['rev-parse', '--show-toplevel']);
-  this.status = this.exec(this.git, ['status', '--porcelain']);
+  // bugfix: zongze.li invalid exec with stderr
+  // this.root = this.exec(this.git, ['rev-parse', '--show-toplevel']);
+  // this.status = this.exec(this.git, ['status', '--porcelain']);
 
-  if (this.status.code) return this.log(Hook.log.status, 0);
-  if (this.root.code) return this.log(Hook.log.root, 0);
+  // if (this.status.code) return this.log(Hook.log.status, 0);
+  // if (this.root.code) return this.log(Hook.log.root, 0);
 
-  this.status = this.status.stdout.toString().trim();
-  this.root = this.root.stdout.toString().trim();
-
-  if (argv[0]) {
-	this.root = path.join(this.root, this.offsetPath);
-  }
+  // this.status = this.status.stdout.toString().trim();
+  // this.root = this.root.stdout.toString().trim();
+  this.root = process.env.PWD;
 
   try {
     this.json = require(path.join(this.root, 'package.json'));
@@ -195,10 +193,11 @@ Hook.prototype.initialize = function initialize() {
   //
   // We can only check for changes after we've parsed the package.json as it
   // contains information if we need to suppress the empty message or not.
-  //
-  if (!this.status.length && !this.options.ignorestatus) {
-    return this.log(Hook.log.empty, 0);
-  }
+
+  // bugfix: zongze.li
+  // if (!this.status.length && !this.options.ignorestatus) {
+  //   return this.log(Hook.log.empty, 0);
+  // }
 
   //
   // If we have a git template we should configure it before checking for
@@ -238,7 +237,12 @@ Hook.prototype.run = function runner() {
       cwd: hooked.root,
       stdio: [0, 1, 2]
     }).once('close', function closed(code) {
-      if (code) return hooked.log(hooked.format(Hook.log.failure, script, code));
+      if (code)  {
+		hooked.log(hooked.format(Hook.log.failure, script, code));
+		// bugfix: zongze.li which not interrupt the check chain
+        process.exit(code);
+        return;
+      }
 
       again(scripts);
     });
