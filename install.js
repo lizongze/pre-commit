@@ -114,10 +114,18 @@ var precommitContent = '#!/usr/bin/env bash' + os.EOL
 // error instead destroying the whole npm install process.
 //
 // try { fs.writeFileSync(precommit, precommitContent); }
+
 try { fs.writeFileSync(precommit, fs.readFileSync(hookRelativeUnixPath)); }
 catch (e) {
+  // for mannul call install from root by node when using rush
   hookRelativeUnixPath = path.join('.', 'common', 'temp', hookRelativeUnixPath)
 }
+try { fs.writeFileSync(precommit, fs.readFileSync(hookRelativeUnixPath)); }
+catch (e) {
+  // for rush install
+  hookRelativeUnixPath = path.join('.', 'hook')
+}
+
 try { fs.writeFileSync(precommit, fs.readFileSync(hookRelativeUnixPath)); }
 catch (e) {
   console.error('pre-commit:');
