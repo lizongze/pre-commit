@@ -26,7 +26,7 @@ function getGitFolderPath(currentPath) {
   if (!exists(git) || !fs.lstatSync(git).isDirectory()) {
     console.log('pre-commit:');
     console.log('pre-commit: Not found .git folder in', git);
-    
+
     var newPath = path.resolve(currentPath, '..');
 
     // Stop if we on top folder

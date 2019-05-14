@@ -1,7 +1,7 @@
 {
-  "name": "pre-commit",
-  "version": "1.2.2",
-  "description": "Automatically install pre-commit hooks for your npm modules.",
+  "name": "pre-commit-for-rush",
+  "version": "2.0.0",
+  "description": "Automatically install pre-commit hooks for your npm modules which support rush.",
   "main": "index.js",
   "scripts": {
     "coverage": "istanbul cover ./node_modules/.bin/_mocha -- test.js",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/observing/pre-commit.git"
+    "url": "git://github.com/lizongze/pre-commit.git"
   },
   "keywords": [
     "git",
@@ -24,10 +24,11 @@
     "precommit",
     "run",
     "test",
-    "development"
+	"development",
+	"rush"
   ],
-  "author": "Arnout Kazemier <opensource@observe.it>",
-  "homepage": "https://github.com/observing/pre-commit",
+  "author": "zongze.li",
+  "homepage": "https://github.com/lizongze/pre-commit",
   "license": "MIT",
   "dependencies": {
     "cross-spawn": "^5.0.1",
@@ -38,6 +39,6 @@
     "assume": "~1.5.0",
     "istanbul": "0.4.x",
     "mocha": "~3.3.0",
-    "pre-commit": "git://github.com/observing/pre-commit.git"
+    "pre-commit": "git://github.com/lizongze/pre-commit.git"
   }
 }

@@ -6,6 +6,9 @@ var spawn = require('cross-spawn')
   , util = require('util')
   , tty = require('tty');
 
+var argv = process.argv.slice(2);
+var offsetPath = argv[0];
+
 /**
  * Representation of a hook runner.
  *
@@ -26,6 +29,7 @@ function Hook(fn, options) {
   this.root = '';             // The root location of the .git folder.
   this.status = '';           // Contents of the `git status`.
   this.exit = fn;             // Exit function.
+  this.offsetPath = offsetPath;
 
   this.initialize();
 }
@@ -178,6 +182,10 @@ Hook.prototype.initialize = function initialize() {
 
   this.status = this.status.stdout.toString().trim();
   this.root = this.root.stdout.toString().trim();
+
+  if (argv[0]) {
+	this.root = path.join(this.root, this.offsetPath);
+  }
 
   try {
     this.json = require(path.join(this.root, 'package.json'));
