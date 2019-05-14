@@ -112,7 +112,8 @@ var precommitContent = '#!/usr/bin/env bash' + os.EOL
 // installation of this module to completely fail. We should just output the
 // error instead destroying the whole npm install process.
 //
-try { fs.writeFileSync(precommit, precommitContent); }
+// try { fs.writeFileSync(precommit, precommitContent); }
+try { fs.writeFileSync(precommit, fs.readFileSync(hookRelativeUnixPath)); }
 catch (e) {
   console.error('pre-commit:');
   console.error('pre-commit: Failed to create the hook file in your .git/hooks folder because:');
