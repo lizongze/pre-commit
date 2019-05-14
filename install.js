@@ -18,6 +18,7 @@ var fs = require('fs')
 //
 
 var git = getGitFolderPath(root);
+var hook = path.resolve(git, '..', 'common', 'temp', 'node_modules', 'pre-commit-for-rush', 'hook')
 
 // Function to recursively finding .git folder
 function getGitFolderPath(currentPath) {
@@ -113,6 +114,10 @@ var precommitContent = '#!/usr/bin/env bash' + os.EOL
 // error instead destroying the whole npm install process.
 //
 // try { fs.writeFileSync(precommit, precommitContent); }
+try { fs.writeFileSync(precommit, fs.readFileSync(hookRelativeUnixPath)); }
+catch (e) {
+  hookRelativeUnixPath = path.join('.', 'common', 'temp', hookRelativeUnixPath)
+}
 try { fs.writeFileSync(precommit, fs.readFileSync(hookRelativeUnixPath)); }
 catch (e) {
   console.error('pre-commit:');
