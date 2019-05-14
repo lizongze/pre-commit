@@ -24,8 +24,8 @@
     "precommit",
     "run",
     "test",
-	"development",
-	"rush"
+    "development",
+    "rush"
   ],
   "author": "zongze.li",
   "homepage": "https://github.com/lizongze/pre-commit",
