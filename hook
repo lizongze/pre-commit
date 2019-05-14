@@ -63,7 +63,7 @@ else
 	)
     curBranch=`git rev-parse --abbrev-ref HEAD`
 	git fetch origin $curBranch
-	diffFiles=`git diff HEAD origin/$curBranch --name-only`
+	diffFiles=`git diff --cached --name-only`
 	cd $dir
 
 	index=0
@@ -91,7 +91,7 @@ else
 			# hit
 			offsetPath=`echo './'$project`
 			cd $offsetPath
-			"$BINARY" -e "require('pre-commit-for-rush')" 2>dev>null
+			"$BINARY" -e "require('pre-commit-for-rush')" 2> /dev/null
 			res=$?
 			if [[ $res -ne 0 ]]; then
 			    msg="$offsetPath Error: Cannot find module 'pre-commit-for-rush'"
