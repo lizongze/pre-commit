@@ -114,10 +114,9 @@ else
 			# hit
 			offsetPath=`echo './'$project`
 			cd $offsetPath
-            echo "$BINARY" -e "require('$preCommit')"
-
-			# "$BINARY" -e "require('$preCommit')" 2> /dev/null
-            "$BINARY" -e "require('$preCommit')"
+            # echo "$BINARY" -e "require('$preCommit')"
+			"$BINARY" -e "require('$preCommit')" 2> /dev/null
+            # "$BINARY" -e "require('$preCommit')"
 			res=$?
 			if [[ $res -ne 0 ]]; then
 			    msg="$offsetPath Error: Cannot find module '$preCommit'"
