@@ -43,18 +43,32 @@ elif [[ -x "$LOCAL" ]]; then
   BINARY="$LOCAL"
 fi
 
+# preCommit="/Users/leo/Documents/gitData/github/front-theory1/apps/link-mobile/hook-index.js"
+touch .gitignore
+sed -i "" "" .gitignore 2>/dev/null
+win=$?
+if [[ 0 -ne $win ]]; then
+    BINARY="node"
+    # preCommit="C:\\\\Users\\\\leo\\\\Documents\\\\gitData\\\\front-theory\\\\apps\\\\link-mobile\\\\hook-index.js"
+    # sedPrefix='""'
+fi
+
+
 if [[ -z "$BINARY" ]]; then
 	exit 1
 fi
 
 "$BINARY" -e "require('./rush.json')" 2> /dev/null
 res=$?
+# echo "BINARY  $BINARY"
+
+preCommit="pre-commit-for-rush"
 
 if [[ $res -ne 0 ]]; then
 	if [[ $* == *--dry-run* ]]; then
 		echoc "--dry-run: execute this hook without side affects"
 	else
-		"$BINARY" "$("$BINARY" -e "console.log(require.resolve('pre-commit-for-rush'))")"
+		"$BINARY" "$("$BINARY" -e "console.log(require.resolve('$preCommit'))")"
 		res=$?
 		if [[ 0 -ne $res ]]; then
 			exit $res
@@ -70,9 +84,12 @@ else
 	diffFiles=`git diff --cached --name-only`
 	cd $dir
 
+    # echo "projects ??  ${projects[@]}";
+
 	index=0
 	for project in ${projects[@]}
 	do
+        # echo "project $project $index"
 		echo $diffFiles | grep -q ^$project
 		res=$?
 		if [[ 0 -eq res ]]; then
@@ -80,6 +97,8 @@ else
 			echoc "$project --changed"
 		fi
 	done
+
+    # echo "project 1-- $project $index"
 
 	if [[ 1 -ne $index ]]; then
 		echoc "$index: changed"
@@ -95,17 +114,20 @@ else
 			# hit
 			offsetPath=`echo './'$project`
 			cd $offsetPath
-			"$BINARY" -e "require('pre-commit-for-rush')" 2> /dev/null
+            echo "$BINARY" -e "require('$preCommit')"
+
+			# "$BINARY" -e "require('$preCommit')" 2> /dev/null
+            "$BINARY" -e "require('$preCommit')"
 			res=$?
 			if [[ $res -ne 0 ]]; then
-			    msg="$offsetPath Error: Cannot find module 'pre-commit-for-rush'"
+			    msg="$offsetPath Error: Cannot find module '$preCommit'"
 				# echoc $msg
 			else
 				echoc $offsetPath
 				if [[ $* == *--dry-run* ]]; then
 					echoc "--dry-run: execute this hook without side affects"
 				else
-					"$BINARY" "$("$BINARY" -e "console.log(require.resolve('pre-commit-for-rush'))")" $project
+					"$BINARY" "$("$BINARY" -e "console.log(require.resolve('$preCommit'))")" $project
 					res=$?
 					if [[ 0 -ne $res ]]; then
 						exit $res

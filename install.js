@@ -81,10 +81,15 @@ if (!exists(hooks)) fs.mkdirSync(hooks);
 if (exists(precommit) && !fs.lstatSync(precommit).isSymbolicLink()) {
   console.log('pre-commit:');
   console.log('pre-commit: Detected an existing git pre-commit hook');
-  fs.writeFileSync(precommit +'.old', fs.readFileSync(precommit));
-  console.log('pre-commit: Old pre-commit hook backuped to pre-commit.old');
+  // N.B: 'white space' and ':' will throw error in writeFileSync on windows
+  const fileName = precommit + `.old_${new Date().toLocaleString()}`.replace(/ /g, '_').replace(/:/g, '.');
+
+  fs.writeFileSync(fileName, fs.readFileSync(precommit));
+  console.log(`pre-commit: Old pre-commit hook backuped to ${fileName}`);
   console.log('pre-commit:');
 }
+
+// fs.writeFileSync("C:\\Users\\leo\\Documents\\gitData\\front-theory\\.git\\hooks\\pre-commit.old_2020-4-14_17.04.48", fs.readFileSync('C:\\Users\\leo\\Documents\\gitData\\front-theory\\.git\\hooks\\pre-commit'));
 
 //
 // We cannot create a symlink over an existing file so make sure it's gone and
@@ -101,6 +106,22 @@ var hookRelativeUnixPath = hook.replace(root, '.');
 if(os.platform() === 'win32') {
   hookRelativeUnixPath = hookRelativeUnixPath.replace(/[\\\/]+/g, '/');
 }
+
+/*
+const pathTransformer = (path = '', unix = false) => {
+    path = path.replace(/\./, root)
+    let ret = path;
+
+    if(os.platform() === 'win32') {
+        console.log('path', path, root)
+        if (unix) {
+            ret = path.replace(/[\\\/]+/g, '/');
+        } else {
+            ret = path.replace(/[\/]/g, '\\');
+        }
+    }
+    return ret;
+} */
 
 var precommitContent = '#!/usr/bin/env bash' + os.EOL
   +  hookRelativeUnixPath + os.EOL
@@ -125,6 +146,9 @@ catch (e) {
   // for rush install
   hookRelativeUnixPath = path.join('.', 'hook')
 }
+
+// hookRelativeUnixPath = pathTransformer('./apps/link-mobile/hook');
+// console.log('hookRelativeUnixPath', hookRelativeUnixPath)
 
 try { fs.writeFileSync(precommit, fs.readFileSync(hookRelativeUnixPath)); }
 catch (e) {
