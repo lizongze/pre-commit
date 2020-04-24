@@ -82,7 +82,7 @@ if (exists(precommit) && !fs.lstatSync(precommit).isSymbolicLink()) {
   console.log('pre-commit:');
   console.log('pre-commit: Detected an existing git pre-commit hook');
   // N.B: 'white space' and ':' will throw error in writeFileSync on windows
-  const fileName = precommit + `.old_${new Date().toLocaleString()}`.replace(/ /g, '_').replace(/:/g, '.');
+  const fileName = precommit + `.old_${+new Date()}`;
 
   fs.writeFileSync(fileName, fs.readFileSync(precommit));
   console.log(`pre-commit: Old pre-commit hook backuped to ${fileName}`);
