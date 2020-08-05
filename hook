@@ -90,7 +90,7 @@ else
 	for project in ${projects[@]}
 	do
         # echo "project $project $index"
-		echo $diffFiles | grep -q "(^|[[:space:]])$project"
+		echo $diffFiles | grep -q -E "(^|[[:space:]])$project"
 		res=$?
 		if [[ 0 -eq $res ]]; then
 			let index++
